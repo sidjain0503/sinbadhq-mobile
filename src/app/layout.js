@@ -5,8 +5,6 @@ import Context from "../provider/provider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import apiClient from "../../lib/apiclient";
-import { loginUser } from "../../lib/mutations";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +15,7 @@ export default function RootLayout({ children }) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    loginUser()
-  }, []);
+
 
   return (
     <html lang="en">

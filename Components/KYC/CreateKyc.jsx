@@ -6,20 +6,19 @@ import { createkyclink } from "../../lib/mutations";
 import { getallpackage } from "../../lib/queries";
 import { useParams } from "next/navigation";
 
-const CreateKyc = ({ id }) => {
+const CreateKyc = ({ id, pid }) => {
   const [show, setshow] = useState(false);
   const [text, settext] = useState("Proceed");
   const [data, setdata] = useState({
     country: "indonesia",
     gender: "male",
+    provider_id: `${pid}`,
   });
   const [error, seterror] = useState(false);
   const [product, setproduct] = useState({ link: "" });
   //   const [pid, setpid] = useState("")
 
   const mutation = useMutation(createkyclink);
-
-
 
   const onchange = (e) => {
     const value = e.target.value;
@@ -29,12 +28,33 @@ const CreateKyc = ({ id }) => {
     // setpid(e.target.value)
   };
 
+  const [date, setdate] = useState("");
+  const [revdate, setrevdate] = useState("");
+
+  const handledate = (e) => {
+    const inputDate = e.target.value;
+
+    let arr = inputDate.split("-"); // Split the input date by '-'
+    let newDateStr = `${arr[1]}-${arr[2]}-${arr[0]}`; 
+
+    setrevdate(newDateStr);
+    console.log(revdate);
+  };
+
   const Create = async () => {
     console.log(data);
     settext("Redirecting wait..");
+
+    const kycdata = {
+      ...data,
+      dob: revdate,
+    };
+
+    console.log(kycdata);
+
     try {
       const product = await mutation.mutateAsync({
-        userData: data,
+        userData: kycdata,
         id: id,
       });
       if (product) {
@@ -48,12 +68,9 @@ const CreateKyc = ({ id }) => {
     }
   };
 
-  
-
   return (
     <>
       <div
-       
         className={`${
           product.link.length === 0 ? "w-[400px]" : "w-[500px] "
         }  rounded-md bg-white`}
@@ -81,32 +98,31 @@ const CreateKyc = ({ id }) => {
                 placeholder="Enter Last name"
                 onchange={onchange}
               />
-              <Input
+              {/* <Input
                 label={"DOB"}
                 name={"dob"}
-                value={data.dob}
+                value={date}
                 placeholder="Enter DOB"
-                type=""
-                onchange={onchange}
-              />
+                type="date"
+                onchange={handledate}
+              /> */}
 
-              {/* <Select
-                    label={"Package"}
-                    name={"packageid"}
-                    value={data.packageid || ""}
-                    placeholder="Packageid"
-                    onchange={onchange}
-                  >
-                    {data.map((item, index) => {
-                      return (
-                        <option key={index} value={`${item.id}`}>
-                          {item.name}{" "}
-                        </option>
-                      );
-                    })}
-
-
-                  </Select> */}
+              <div className="flex flex-col w-full gap-[6px]">
+                <label
+                  htmlFor="name"
+                  className="text-sm  font-medium text-gray-700"
+                >
+                  DOB
+                </label>
+                <input
+                  type="date"
+                  name="dob"
+                  value={date}
+                  onChange={handledate}
+                  placeholder=""
+                  className="p-[10px] rounded-md border boder-gray-200"
+                />
+              </div>
 
               <Select
                 label={"Country"}
@@ -130,19 +146,22 @@ const CreateKyc = ({ id }) => {
                 <option value="female">Female</option>
               </Select>
 
-              <Input
-                label={"BVM"}
-                name={"bvm"}
-                value={data.bvm}
-                placeholder="BVM (optional)"
-                type=""
-                onchange={onchange}
-              />
+              {data.country === "nigeria" && (
+                <Input
+                  label={"BVM"}
+                  name={"bvm"}
+                  value={data.bvm}
+                  placeholder="BVM (optional)"
+                  type=""
+                  onchange={onchange}
+                />
+              )}
+
               {/*  */}
 
               {error && (
                 <span className="text-rose-500 text-[14px]">
-                  Please fill all credentials 
+                  Please fill all credentials
                 </span>
               )}
 
@@ -169,14 +188,14 @@ const CreateKyc = ({ id }) => {
 
 export default CreateKyc;
 
-const Input = ({ label, placeholder, name, value, onchange }) => {
+const Input = ({ label, placeholder, name, value, onchange, type }) => {
   return (
     <div className="flex flex-col w-full gap-[6px]">
       <label htmlFor="name" className="text-sm  font-medium text-gray-700">
         {label}
       </label>
       <input
-        type="text"
+        type={`${type}` || "text"}
         name={`${name}`}
         value={value}
         onChange={onchange}
