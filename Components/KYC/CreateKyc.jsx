@@ -10,13 +10,18 @@ const CreateKyc = ({ id, pid }) => {
   const [show, setshow] = useState(false);
   const [text, settext] = useState("Proceed");
   const [data, setdata] = useState({
-    country: "indonesia",
+    nationality: "indonesia",
     gender: "male",
     provider_id: `${pid}`,
+    first_name: "",
+    last_name: "",
+    address: "",
+    email: "",
+    dob: "",
   });
   const [error, seterror] = useState(false);
   const [product, setproduct] = useState({ link: "" });
-  //   const [pid, setpid] = useState("")
+  const [proceed, setproceed] = useState(false);
 
   const mutation = useMutation(createkyclink);
 
@@ -26,6 +31,28 @@ const CreateKyc = ({ id, pid }) => {
 
     setdata({ ...data, [name]: value });
     // setpid(e.target.value)
+
+    console.log(
+      "fl",  data.first_name !== "",
+      "ll",   data.last_name !== "",
+      "e",   data.email !== "",
+       "a",  data.address !== "",
+      "p",   data.phone_number !== "",
+      "date",   date !== "" , date
+      );
+    if (
+      data.first_name !== "" &&
+      data.last_name !== "" &&
+      data.email !== "" &&
+      data.address !== "" 
+    ) {
+      setproceed(true);
+      seterror(false);
+      console.log({ ...data });
+     
+    } else {
+      setproceed(false);
+    }
   };
 
   const [date, setdate] = useState("");
@@ -33,39 +60,59 @@ const CreateKyc = ({ id, pid }) => {
 
   const handledate = (e) => {
     const inputDate = e.target.value;
-
+    setdate(inputDate);
     let arr = inputDate.split("-"); // Split the input date by '-'
-    let newDateStr = `${arr[1]}-${arr[2]}-${arr[0]}`; 
+    let newDateStr = `${arr[1]}-${arr[2]}-${arr[0]}`;
 
     setrevdate(newDateStr);
     console.log(revdate);
   };
 
+  const [numid, setnumid] = useState("+62");
+
   const Create = async () => {
     console.log(data);
-    settext("Redirecting wait..");
+
+    const phonenumber = data.phone_number;
 
     const kycdata = {
       ...data,
       dob: revdate,
+      phone_number: `${numid}${phonenumber}`,
     };
 
-    console.log(kycdata);
+    console.log("fuckkkk", kycdata, proceed);
 
-    try {
-      const product = await mutation.mutateAsync({
-        userData: kycdata,
-        id: id,
-      });
-      if (product) {
-        if (typeof (window === "undefined")) {
-          window.location.href = `${product.link}`;
+    if (
+      data.first_name !== "" &&
+      data.last_name !== "" &&
+      data.email !== "" &&
+      data.address !== "" &&
+      date !== ""
+    ) {
+      settext("Redirecting wait..");
+      seterror(false);
+      setproceed(true);
+      try {
+        const product = await mutation.mutateAsync({
+          userData: kycdata,
+          id: id,
+        });
+        if (product) {
+          if (typeof (window === "undefined")) {
+            window.location.href = `${product.link}`;
+          }
         }
+      } catch (error) {
+        console.error("error:", error);
+        seterror(true);
       }
-    } catch (error) {
-      console.error("error:", error);
+    } else {
       seterror(true);
+      setproceed(false);
     }
+
+    
   };
 
   return (
@@ -75,12 +122,6 @@ const CreateKyc = ({ id, pid }) => {
           product.link.length === 0 ? "w-[400px]" : "w-[500px] "
         }  rounded-md bg-white`}
       >
-        <div className="w-full flex flex-col items-center p-[30px]">
-          <span className="text-lg font-semibold text-gray-900 ">
-            User Details
-          </span>
-        </div>
-
         <div className="flex w-full flex-col items-center justify-center gap-[20px] pt-0 p-[30px]">
           {product.link.length === 0 && (
             <>
@@ -90,6 +131,7 @@ const CreateKyc = ({ id, pid }) => {
                 value={data.first_name}
                 placeholder="Enter First name"
                 onchange={onchange}
+                type="text"
               />
               <Input
                 label={"Last Name"}
@@ -97,6 +139,34 @@ const CreateKyc = ({ id, pid }) => {
                 value={data.last_name}
                 placeholder="Enter Last name"
                 onchange={onchange}
+                type="text"
+              />
+              <Input
+                label={"Email"}
+                name={"email"}
+                value={data.email}
+                placeholder="Enter your email"
+                onchange={onchange}
+                type="email"
+              />
+              <Mobilenumber
+                label={"Mobile No."}
+                name={"phone_number"}
+                value={data.phone_number}
+                placeholder="Enter your number"
+                onchange={onchange}
+                type="email"
+                nationality={`${data.nationality}`}
+                numid={numid}
+                setnumid={setnumid}
+              />
+              <Input
+                label={"Address"}
+                name={"address"}
+                value={data.address}
+                placeholder="Enter your address"
+                onchange={onchange}
+                type="text"
               />
               {/* <Input
                 label={"DOB"}
@@ -125,33 +195,22 @@ const CreateKyc = ({ id, pid }) => {
               </div>
 
               <Select
-                label={"Country"}
-                name={"country"}
-                value={data.country}
-                placeholder="country"
+                label={"Nationality"}
+                name={"nationality"}
+                value={data.nationality}
+                placeholder="nationality"
                 onchange={onchange}
               >
                 <option value="indonesia">Indonesia</option>
                 <option value="nigeria">Nigeria</option>
               </Select>
 
-              <Select
-                label={"Gender"}
-                name={"gender"}
-                value={data.gender}
-                placeholder="Country"
-                onchange={onchange}
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </Select>
-
-              {data.country === "nigeria" && (
+              {data.nationality === "nigeria" && (
                 <Input
-                  label={"BVM"}
-                  name={"bvm"}
+                  label={"BVN"}
+                  name={"bvn"}
                   value={data.bvm}
-                  placeholder="BVM (optional)"
+                  placeholder="BVM "
                   type=""
                   onchange={onchange}
                 />
@@ -167,7 +226,11 @@ const CreateKyc = ({ id, pid }) => {
 
               <button
                 onClick={Create}
-                className="w-full h-[44px] rounded-md bg-gray-200 text-[#6D7987] font-semibold text-md cursor-pointer"
+                className={`w-full h-[44px] rounded-md  ${
+                  proceed
+                    ? " bg-sinbadhq text-white "
+                    : " bg-gray-200 text-[#6D7987] "
+                } bg-gray-200 text-[#6D7987] font-semibold text-md cursor-pointer `}
               >
                 {text}
               </button>
@@ -202,6 +265,49 @@ const Input = ({ label, placeholder, name, value, onchange, type }) => {
         placeholder={`${placeholder}`}
         className="p-[10px] rounded-md border boder-gray-200"
       />
+    </div>
+  );
+};
+
+const Mobilenumber = ({
+  label,
+  placeholder,
+  name,
+  value,
+  onchange,
+  setnumid,
+  numid,
+}) => {
+  const handlephoneid = (e) => {
+    setnumid(e.target.value);
+    console.log(numid);
+  };
+
+  return (
+    <div className="flex flex-col w-full gap-[6px]">
+      <label htmlFor="name" className="text-sm  font-medium text-gray-700">
+        {label}
+      </label>
+      <div className="w-full flex gap-[10px]">
+        <select
+          name=""
+          id=""
+          onChange={handlephoneid}
+          value={numid}
+          className="p-[10px] rounded-md border boder-gray-200 text-gray-500 flex justify-center items-center"
+        >
+          <option value="+234">+234</option>
+          <option value="+62">+62</option>
+        </select>
+        <input
+          type={"number"}
+          name={`${name}`}
+          value={value}
+          onChange={onchange}
+          placeholder={`${placeholder}`}
+          className="p-[10px] rounded-md border boder-gray-200 w-full"
+        />
+      </div>
     </div>
   );
 };
