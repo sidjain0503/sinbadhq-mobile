@@ -167,8 +167,8 @@ const CreateKyc = ({ id, pid }) => {
                 <Input
                   label={"BVN"}
                   name={"bvn"}
-                  value={data.bvm}
-                  placeholder="BVM "
+                  value={data.bvn}
+                  placeholder="BVN "
                   type=""
                   onchange={onchange}
                 />
