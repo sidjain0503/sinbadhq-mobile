@@ -17,7 +17,7 @@ const CreateKyc = ({ id, pid }) => {
     last_name: "",
     address: "",
     email: "",
-    dob: "",
+   
   });
   const [error, seterror] = useState(false);
   const [product, setproduct] = useState({ link: "" });
@@ -45,18 +45,6 @@ const CreateKyc = ({ id, pid }) => {
     }
   };
 
-  const [date, setdate] = useState("");
-  const [revdate, setrevdate] = useState("");
-
-  const handledate = (e) => {
-    const inputDate = e.target.value;
-    setdate(inputDate);
-    let arr = inputDate.split("-"); // Split the input date by '-'
-    let newDateStr = `${arr[1]}-${arr[2]}-${arr[0]}`;
-
-    setrevdate(newDateStr);
-  };
-
   const [numid, setnumid] = useState("+62");
 
   const Create = async () => {
@@ -64,7 +52,6 @@ const CreateKyc = ({ id, pid }) => {
 
     const kycdata = {
       ...data,
-      dob: revdate,
       phone_number: `${numid}${phonenumber}`,
     };
 
@@ -72,8 +59,7 @@ const CreateKyc = ({ id, pid }) => {
       data.first_name !== "" &&
       data.last_name !== "" &&
       data.email !== "" &&
-      data.address !== "" &&
-      date !== ""
+      data.address !== ""
     ) {
       settext("Redirecting wait..");
       seterror(false);
@@ -91,6 +77,8 @@ const CreateKyc = ({ id, pid }) => {
       } catch (error) {
         console.error("error:", error);
         seterror(true);
+        setproceed(false);
+        settext("Proceed");
       }
     } else {
       seterror(true);
@@ -160,23 +148,6 @@ const CreateKyc = ({ id, pid }) => {
                 onchange={handledate}
               /> */}
 
-              <div className="flex flex-col w-full gap-[6px]">
-                <label
-                  htmlFor="name"
-                  className="text-sm  font-medium text-gray-700"
-                >
-                  DOB
-                </label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={date}
-                  onChange={handledate}
-                  placeholder=""
-                  className="p-[10px] rounded-md border boder-gray-200"
-                />
-              </div>
-
               <Select
                 label={"Nationality"}
                 name={"nationality"}
@@ -184,8 +155,12 @@ const CreateKyc = ({ id, pid }) => {
                 placeholder="nationality"
                 onchange={onchange}
               >
-                <option className="py-4 px-4"  value="indonesia">Indonesia</option>
-                <option className="py-4 px-4"  value="nigeria">Nigeria</option>
+                <option className="py-4 px-4" value="indonesia">
+                  Indonesia
+                </option>
+                <option className="py-4 px-4" value="nigeria">
+                  Nigeria
+                </option>
               </Select>
 
               {data.nationality === "nigeria" && (
@@ -279,11 +254,15 @@ const Mobilenumber = ({
           value={numid}
           className="p-[10px] rounded-md border boder-gray-200 text-gray-500 flex justify-center items-center"
         >
-          <option className="py-4 px-4"  value="+234">+234</option>
-          <option className="py-4 px-4"  value="+62">+62</option>
+          <option className="py-4 px-4" value="+234">
+            +234
+          </option>
+          <option className="py-4 px-4" value="+62">
+            +62
+          </option>
         </select>
         <input
-          type={"number"}
+          type={"text"}
           name={`${name}`}
           value={value}
           onChange={onchange}
