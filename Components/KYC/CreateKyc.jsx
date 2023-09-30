@@ -32,24 +32,14 @@ const CreateKyc = ({ id, pid }) => {
     setdata({ ...data, [name]: value });
     // setpid(e.target.value)
 
-    console.log(
-      "fl",  data.first_name !== "",
-      "ll",   data.last_name !== "",
-      "e",   data.email !== "",
-       "a",  data.address !== "",
-      "p",   data.phone_number !== "",
-      "date",   date !== "" , date
-      );
     if (
       data.first_name !== "" &&
       data.last_name !== "" &&
       data.email !== "" &&
-      data.address !== "" 
+      data.address !== ""
     ) {
       setproceed(true);
       seterror(false);
-      console.log({ ...data });
-     
     } else {
       setproceed(false);
     }
@@ -65,14 +55,11 @@ const CreateKyc = ({ id, pid }) => {
     let newDateStr = `${arr[1]}-${arr[2]}-${arr[0]}`;
 
     setrevdate(newDateStr);
-    console.log(revdate);
   };
 
   const [numid, setnumid] = useState("+62");
 
   const Create = async () => {
-    console.log(data);
-
     const phonenumber = data.phone_number;
 
     const kycdata = {
@@ -80,8 +67,6 @@ const CreateKyc = ({ id, pid }) => {
       dob: revdate,
       phone_number: `${numid}${phonenumber}`,
     };
-
-    console.log("fuckkkk", kycdata, proceed);
 
     if (
       data.first_name !== "" &&
@@ -111,8 +96,6 @@ const CreateKyc = ({ id, pid }) => {
       seterror(true);
       setproceed(false);
     }
-
-    
   };
 
   return (
@@ -201,8 +184,8 @@ const CreateKyc = ({ id, pid }) => {
                 placeholder="nationality"
                 onchange={onchange}
               >
-                <option value="indonesia">Indonesia</option>
-                <option value="nigeria">Nigeria</option>
+                <option className="py-4 px-4"  value="indonesia">Indonesia</option>
+                <option className="py-4 px-4"  value="nigeria">Nigeria</option>
               </Select>
 
               {data.nationality === "nigeria" && (
@@ -296,8 +279,8 @@ const Mobilenumber = ({
           value={numid}
           className="p-[10px] rounded-md border boder-gray-200 text-gray-500 flex justify-center items-center"
         >
-          <option value="+234">+234</option>
-          <option value="+62">+62</option>
+          <option className="py-4 px-4"  value="+234">+234</option>
+          <option className="py-4 px-4"  value="+62">+62</option>
         </select>
         <input
           type={"number"}
