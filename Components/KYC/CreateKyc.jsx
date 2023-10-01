@@ -17,7 +17,6 @@ const CreateKyc = ({ id, pid }) => {
     last_name: "",
     address: "",
     email: "",
-   
   });
   const [error, seterror] = useState(false);
   const [product, setproduct] = useState({ link: "" });
@@ -246,21 +245,24 @@ const Mobilenumber = ({
       <label htmlFor="name" className="text-sm  font-medium text-gray-700">
         {label}
       </label>
-      <div className="w-full flex gap-[10px]">
-        <select
-          name=""
-          id=""
-          onChange={handlephoneid}
-          value={numid}
-          className="p-[10px] rounded-md border boder-gray-200 text-gray-500 flex justify-center items-center"
-        >
-          <option className="py-4 px-4" value="+234">
-            +234
-          </option>
-          <option className="py-4 px-4" value="+62">
-            +62
-          </option>
-        </select>
+      <div className="w-full flex gap-[10px] ">
+        <div className="p-[10px] rounded-md border boder-gray-200">
+          <select
+            name=""
+            id=""
+            onChange={handlephoneid}
+            value={numid}
+            className=" text-gray-500 flex justify-center items-center"
+          >
+            <option className="py-4 px-4" value="+234">
+              +234
+            </option>
+            <option className="py-4 px-4" value="+62">
+              +62
+            </option>
+          </select>
+        </div>
+
         <input
           type={"text"}
           name={`${name}`}
@@ -280,15 +282,17 @@ const Select = ({ label, placeholder, name, value, onchange, children }) => {
       <label htmlFor="name" className="text-sm font-normal text-gray-700">
         {label}
       </label>
-      <select
+    <div className="p-[10px] rounded-md border boder-gray-200">
+    <select
         name={`${name}`}
         value={value}
         onChange={onchange}
         placeholder={`${placeholder}`}
-        className="p-[10px] rounded-md border boder-gray-200 text-gray-500"
+        className=" w-full text-gray-500"
       >
         {children}
       </select>
+    </div>
     </div>
   );
 };
