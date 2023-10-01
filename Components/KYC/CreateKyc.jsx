@@ -21,7 +21,7 @@ const CreateKyc = ({ id, pid }) => {
   const [error, seterror] = useState(false);
   const [product, setproduct] = useState({ link: "" });
   const [proceed, setproceed] = useState(false);
-
+const [errortext, seterrortext] = useState("Please fill all credentials")
   const mutation = useMutation(createkyclink);
 
   const onchange = (e) => {
@@ -74,8 +74,9 @@ const CreateKyc = ({ id, pid }) => {
           }
         }
       } catch (error) {
-        console.error("error:", error);
-        seterror(true);
+        console.error("error:", error.message);
+        seterror(true)
+        seterrortext("You can’t submit another form, we already have a submission");
         setproceed(false);
         settext("Proceed");
       }
@@ -176,8 +177,8 @@ const CreateKyc = ({ id, pid }) => {
               {/*  */}
 
               {error && (
-                <span className="text-rose-500 text-[14px]">
-                  Please fill all credentials
+                <span className="text-rose-500 text-[14px] text-center px-[30px]">
+                  {errortext}
                 </span>
               )}
 
@@ -246,13 +247,13 @@ const Mobilenumber = ({
         {label}
       </label>
       <div className="w-full flex gap-[10px] ">
-        <div className="p-[10px] rounded-md border boder-gray-200">
+        <div className="  bg-white p-[10px] rounded-md border boder-gray-200">
           <select
             name=""
             id=""
             onChange={handlephoneid}
             value={numid}
-            className=" text-gray-500 flex justify-center items-center"
+            className=" text-gray-500 flex justify-center items-center bg-white"
           >
             <option className="py-4 px-4" value="+234">
               +234
@@ -282,13 +283,13 @@ const Select = ({ label, placeholder, name, value, onchange, children }) => {
       <label htmlFor="name" className="text-sm font-normal text-gray-700">
         {label}
       </label>
-    <div className="p-[10px] rounded-md border boder-gray-200">
+    <div className="p-[10px] rounded-md border boder-gray-200  bg-white">
     <select
         name={`${name}`}
         value={value}
         onChange={onchange}
         placeholder={`${placeholder}`}
-        className=" w-full text-gray-500"
+        className=" w-full text-gray-500  bg-white"
       >
         {children}
       </select>
